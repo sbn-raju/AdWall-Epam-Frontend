@@ -11,7 +11,7 @@ const navigate = useNavigate();
   return (
     <>
     {/* Navbar */}
-    <nav className="flex justify-between items-center py-4 px-6 text-white bg-gray-800 shadow-lg mb-6">
+    <nav className="flex justify-between items-center py-4 px-6 text-white bg-gray-800 shadow-lg ">
         <h1 className="text-xl font-bold">AdWall</h1>
         <div className="space-x-4">
           <button className="border border-none px-4 py-2 rounded hover:bg-gray-700"

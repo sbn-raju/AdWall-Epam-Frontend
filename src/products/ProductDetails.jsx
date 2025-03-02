@@ -17,7 +17,7 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900  p-12 flex justify-center">
+    <div className="min-h-screen bg-gray-900 p-12 flex justify-center">
       <div className="bg-gray-800 shadow-lg rounded-lg max-w-5xl w-full flex flex-col md:flex-row">
         {/* Left Container - Product Images */}
         <div className="md:w-1/2 p-6 flex justify-center items-center">

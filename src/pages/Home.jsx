@@ -28,7 +28,7 @@ const Home = () => {
 
 
   return (
-    <div className="space-y-10 bg-gray-900 text-white min-h-screen">
+    <div className="space-y-10 bg-gray-900 text-white min-h-screen mt-6 p-6">
       {/* Hero Section */}
       <header className="flex flex-col md:flex-row items-center justify-center p-10 bg-gray-800 rounded-lg shadow-lg">
         {/* Logo Section */}
