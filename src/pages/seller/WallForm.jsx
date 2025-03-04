@@ -1,3 +1,4 @@
+import { IKUpload } from "imagekitio-react";
 import React, { useState } from "react";
 
 export default function WallForm() {
@@ -28,6 +29,14 @@ export default function WallForm() {
     e.preventDefault();
     console.log("Submitted Data:", formData);
   };
+
+  const onError = (e) =>{
+    console.log(e)
+  }
+
+  const onSuccess = (e) =>{
+    console.log("Success", e);
+  }
 
   return (
     <div className="w-xl mx-auto p-6 bg-gray-800 shadow-lg text-white rounded-lg">
@@ -76,13 +85,10 @@ export default function WallForm() {
         {/* Wall Image */}
         <div>
           <label className="block text-white font-medium">Upload Wall Image</label>
-          <input 
-            type="file" 
-            name="image" 
-            onChange={handleChange} 
-            className="w-full p-2 border rounded-md"
-            accept="image/*"
-            required
+          <IKUpload 
+            fileName={`wallImage-${Date.now()}.png`}
+            onError={onError}
+            onSuccess={onSuccess}
           />
         </div>
 

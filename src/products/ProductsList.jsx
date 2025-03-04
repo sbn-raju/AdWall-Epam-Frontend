@@ -9,7 +9,6 @@ const Product = () => {
     { id: 4, name: "Wall D", location: "Highway", price: "$600/month", image: "https://via.placeholder.com/300" },{ id: 1, name: "Wall A", location: "Downtown", price: "$500/month", image: "https://via.placeholder.com/300" },
     { id: 5, name: "Wall B", location: "City Center", price: "$700/month", image: "https://via.placeholder.com/300" },
     { id: 6, name: "Wall C", location: "Suburbs", price: "$300/month", image: "https://drive.google.com/file/d/1PVW28rRqk76J1-MAhptZrUl5Wm_fsmEy/view?usp=sharing" },
-    // { id: 7, name: "Wall D", location: "Highway", price: "$600/month", image: "https://via.placeholder.com/300" },
   ]);
 
   const navigate = useNavigate();

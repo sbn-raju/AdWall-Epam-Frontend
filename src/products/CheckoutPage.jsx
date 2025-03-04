@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Disclosure } from "@headlessui/react";
+import { useNavigate } from 'react-router-dom'
 
 const CheckoutPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone:"",
     address: "",
     city: "",
     zip: "",
@@ -13,6 +15,9 @@ const CheckoutPage = () => {
     cvv: "",
     paymentMode: ""
   });
+  const navigate = useNavigate();
+
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,7 +25,7 @@ const CheckoutPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Payment Successful! Your wall has been rented.");
+    navigate("/payment", {state: formData});
   };
 
   return (
@@ -45,6 +50,17 @@ const CheckoutPage = () => {
               type="email"
               name="email"
               value={formData.email}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block">Phone No.</label>
+            <input
+              type="phone"
+              name="phone"
+              value={formData.phone}
               onChange={handleChange}
               className="w-full border rounded-lg p-2 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
