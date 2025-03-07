@@ -3,7 +3,6 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "./components/Loader";
-import { IKContext } from "imagekitio-react";
 
 // Lazy-loaded components
 const LoginPage = lazy(() => import("./pages/auth/Login"));
@@ -22,54 +21,19 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import WallForm from "./pages/seller/WallForm";
 import Transaction from "./pages/seller/Transactions";
 import BASE_URI from "./utils/base_uri";
-import Testing from "./pages/Testing";
 import Payments from "./Payments";
+import AdsWall from "./pages/seller/AdsWall";
+import ProductSellerDetails from "./pages/seller/Product";
+import RentWall from "./pages/seller/rent/RentWalls";
+import RentWallDetails from "./pages/seller/rent/RentWallDetails";
+import EditProfile from "./EditProfile";
 const Profile = lazy(() => import("./Profile"));
 
 const App = () => {
-  //Loading states for the verification.
-  const [isLoading, setIsLoading] = useState(false);
-
+  
+  //Getting the user role from the session Storage.
   const role = sessionStorage.getItem("userRole");
 
-  //Getting the creadintials for imageKit authentication.
-  const urlEndpoint = import.meta.env.VITE_REACT_IMAGE_KIT_API_URL;
-  const publicKey = import.meta.env.VITE_REACT_IMAGE_KIT_PUBLIC_KEY;
-
-  //Getting the signature and the authentication token from the backend.
-  const authenticator = async () => {
-    //Active the loading state when we hit on this URL for the signature and token.
-    setIsLoading(true);
-
-    try {
-      const response = await fetch(`${BASE_URI}/third-party/auth/image-kit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Request failed with status ${response.status}: ${errorText}`
-        );
-      }
-
-      const data = await response.json();
-
-      //Extracting the signature and token from the data.
-      const { signature, expire, token } = data;
-      return { signature, expire, token };
-
-    } catch (error) {
-      toast.error(`Authentication request failed: ${error.message}`);
-      throw new Error(`Authentication request failed: ${error.message}`);
-    } finally {
-      //Pausing the Loading state.
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Router>
@@ -83,7 +47,7 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/products-list" element={<Product />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/product/:product_id" element={<ProductDetails />} />
 
             <Route
               path="/checkout/:id"
@@ -92,6 +56,11 @@ const App = () => {
                   <CheckoutPage />
                 </PrivateRoute>
               }
+            />
+
+            <Route
+              path={'/payment/:product_id'}
+              element={<Payments />}
             />
           </Route>
 
@@ -107,33 +76,55 @@ const App = () => {
 
             <Route path="/seller/dashboard" element={<SellerDashboard />} />
 
-            <Route path={`${role}/dashboard/profile/`} element={<Profile />} />
+            <Route path={`/${role}/dashboard/profile/`} element={<Profile />} />
+
+            <Route path={`/dashboard/edit-profile/`} element={<EditProfile />} />
 
             <Route
               path="/seller/dashboard/add/wall"
               element={
-                <IKContext
-                  urlEndpoint={urlEndpoint}
-                  publicKey={publicKey}
-                  authenticator={authenticator}
-                >
-                  <WallForm/>
-                </IKContext>
+                <WallForm/>
+              }
+            />
+
+              <Route
+              path="/seller/dashboard/walls"
+              element={
+                <AdsWall/>
               }
             />
 
             <Route
-              path={`${role}/dashboard/tansactions`}
+              path="/seller/dashboard/walls/details/:product_id"
+              element={
+                <ProductSellerDetails/>
+              }
+            />
+
+            <Route
+              path="/seller/dashboard/rented-walls"
+              element={
+                <RentWall/>
+              }
+            />
+
+
+            <Route
+              path="/seller/dashboard/rented-walls/details/:product_id"
+              element={
+                <RentWallDetails/>
+              }
+            />
+
+            <Route
+              path={`/buyer/dashboard/tansactions`}
               element={<Transaction />}
             />
 
 
           </Route>
 
-            <Route
-              path={`/payment`}
-              element={<Payments />}
-            />
+           
           
           
 

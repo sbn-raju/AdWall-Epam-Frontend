@@ -13,8 +13,10 @@ import {
   History,
   ImagePlus,
   RotateCcw,
+  BrickWall
 } from "lucide-react";
 import Header from "../components/Header";
+import { useAuth } from "../hooks/AuthHooks";
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -33,12 +35,7 @@ export default function DashboardLayout() {
       optionName: "Transactions",
       link: "buyer/dashboard/tansactions",
     },
-    {
-      id: 3,
-      icon: <ShoppingBag className="mr-2" />,
-      optionName: "Orders",
-      link: "buyer/dashboard/profile",
-    },
+    
     {
       id: 4,
       icon: <History className="mr-2" />,
@@ -62,23 +59,30 @@ export default function DashboardLayout() {
     },
     {
       id: 3,
-      icon: <BadgeIndianRupee className="mr-2" />,
-      optionName: "Transactions",
-      link: "/seller/dashboard/tansactions",
+      icon: <ShoppingBag className="mr-2" />,
+      optionName: "Orders",
+      link: "/seller/dashboard/profile",
+    },
+    {
+      id: 5,
+      icon: <BrickWall  className="mr-2" />,
+      optionName: "Walls",
+      link: "/seller/dashboard/walls",
     },
     {
       id: 4,
       icon: <BadgeCheck className="mr-2" />,
       optionName: "Walls on the Rent",
-      link: "buyer/dashboard/profile",
+      link: "/seller/dashboard/rented-walls",
     },
-    {
-      id: 5,
-      icon: <RotateCcw className="mr-2" />,
-      optionName: "Redo Walls",
-      link: "buyer/dashboard/profile",
-    },
+    
   ];
+
+  const { logout } = useAuth();
+
+  const handleLogout = () =>{
+    logout();
+  }
 
   return (
     <div className="bg-gray-900">
@@ -124,7 +128,7 @@ export default function DashboardLayout() {
                     </li>
                   ))}
               <li>
-                <button className="flex items-center p-2 text-red-600 hover:bg-red-100 w-full rounded-md">
+                <button onClick={handleLogout} className="flex items-center p-2 text-red-600 hover:bg-red-100 w-full rounded-md">
                   <LogOut className="mr-2" /> Logout
                 </button>
               </li>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Testimonials from "./Testimonials";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -81,6 +82,9 @@ const Home = () => {
           ))}
         </div>
       </section>
+
+      <Testimonials/>
+
 
       {/* Footer */}
       <footer className="text-center py-6">

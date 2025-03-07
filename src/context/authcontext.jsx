@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }) => {
     setAuthState({
       isAuthenticated: false,
       user: null,
-      token: null,
     });
     sessionStorage.removeItem('user');
     sessionStorage.removeItem("userRole");

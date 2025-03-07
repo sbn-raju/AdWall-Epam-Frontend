@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import BASE_URI from "../utils/base_uri";
+import BASE_URI from "../../../utils/base_uri";
 import moment from "moment/moment";
-import Loader from "../components/Loader";
+import Loader from "../../../components/Loader";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
-const Product = () => {
+const RentWall = () => {
   const [ads, setAds] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +18,7 @@ const Product = () => {
     setIsLoading(true);
   try {
     const response = await fetch(
-      `${BASE_URI}/product/list?page=${currentPage}&limit=${limit}`,{
+      `${BASE_URI}/product/seller/rented?page=${currentPage}&limit=${limit}`,{
         method:"GET",
         credentials:'include'
       }
@@ -29,6 +30,7 @@ const Product = () => {
       setTotalCount(result.totalCount);
     }
   } catch (error) {
+    toast.error(error.message);
     console.error("Error fetching ads:", error);
   }finally{
     setIsLoading(false);
@@ -48,7 +50,7 @@ const Product = () => {
 
   
   const handleNavigate = (product_id) =>{
-      navigate(`/product/${product_id}`)
+      navigate(`/seller/dashboard/rented-walls/details/${product_id}`)
   }
   
 
@@ -56,7 +58,7 @@ const Product = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Products</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">Wall On Rent</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {ads.map((ad) => (
           <motion.div
@@ -65,6 +67,7 @@ const Product = () => {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            onClick={() => handleNavigate(ad.id)}
           >
             <img
               src={ad.image_link}
@@ -74,12 +77,8 @@ const Product = () => {
             <h2 className="text-xl font-semibold">{ad.name}</h2>
             <p className="text-gray-400">{ad.description}</p>
             <p className="text-yellow-400 font-bold mt-2">₹ {ad.price}</p>
-            <p className="text-gray-500 text-sm mt-1">Posted on {moment(ad.date).format("DD MMM YYYY")}</p>
-            {/* <p className={`w-1/2 text-center mt-1 px-2 py-1 rounded-full font-semibold ${!ad.is_available ? "text-red-600 bg-red-200" : "text-green-600 bg-green-200"}`} >{!ad.is_available ? "Not Avialable": "Avialable" }</p> */}
-            <button className="p-2 bg-orange-400 rounded-md mt-4" onClick={() => handleNavigate(ad.id)}>
-              Rent Now
-            </button>
-           
+            <p className="text-gray-500 text-sm mt-1">Posted on {moment(ad.created_at).format("DD MMM YYYY")}</p>
+            <p className={`w-1/2 text-center mt-1 px-2 py-1 rounded-full font-semibold text-red-600 bg-red-200`}>Not Avialable</p>
           </motion.div>
         ))}
       </div>
@@ -102,8 +101,9 @@ const Product = () => {
           Next
         </button>
       </div>
+      <Toaster/>
     </div>
   );
 };
 
-export default Product;
+export default RentWall;

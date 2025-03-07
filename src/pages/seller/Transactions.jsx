@@ -1,89 +1,104 @@
 import React, { useState, useEffect } from "react";
-
-const transactionsData = [
-  { id: 1, amount: 250, date: "2024-03-01", status: "Completed", type: "Credit" },
-  { id: 2, amount: 120, date: "2024-03-02", status: "Pending", type: "Debit" },
-  { id: 3, amount: 320, date: "2024-03-03", status: "Completed", type: "Credit" },
-  { id: 4, amount: 150, date: "2024-03-04", status: "Failed", type: "Debit" },
-  { id: 5, amount: 500, date: "2024-03-05", status: "Completed", type: "Credit" },
-  { id: 6, amount: 90, date: "2024-03-06", status: "Pending", type: "Debit" },
-  { id: 7, amount: 700, date: "2024-03-07", status: "Completed", type: "Credit" },
-  { id: 8, amount: 230, date: "2024-03-08", status: "Failed", type: "Debit" },
-  { id: 9, amount: 110, date: "2024-03-09", status: "Completed", type: "Credit" },
-  { id: 10, amount: 400, date: "2024-03-10", status: "Pending", type: "Debit" },
-  { id: 11, amount: 50, date: "2024-03-11", status: "Completed", type: "Credit" },
-  { id: 12, amount: 330, date: "2024-03-12", status: "Failed", type: "Debit" },
-  { id: 13, amount: 250, date: "2024-03-01", status: "Completed", type: "Credit" },
-  { id: 14, amount: 120, date: "2024-03-02", status: "Pending", type: "Debit" },
-  { id: 15, amount: 320, date: "2024-03-03", status: "Completed", type: "Credit" },
-  { id: 16, amount: 150, date: "2024-03-04", status: "Failed", type: "Debit" },
-  { id: 17, amount: 500, date: "2024-03-05", status: "Completed", type: "Credit" },
-  { id: 18, amount: 90, date: "2024-03-06", status: "Pending", type: "Debit" },
-  { id: 19, amount: 700, date: "2024-03-07", status: "Completed", type: "Credit" },
-  { id: 20, amount: 230, date: "2024-03-08", status: "Failed", type: "Debit" },
-  { id: 21, amount: 110, date: "2024-03-09", status: "Completed", type: "Credit" },
-  { id: 22, amount: 400, date: "2024-03-10", status: "Pending", type: "Debit" },
-  { id: 23, amount: 50, date: "2024-03-11", status: "Completed", type: "Credit" },
-  { id: 24, amount: 330, date: "2024-03-12", status: "Failed", type: "Debit" },
-];
+import BASE_URI from "../../utils/base_uri";
+import toast from "react-hot-toast";
+import moment from "moment";
+import Loader from "../../components/Loader";
 
 export default function Transaction() {
-  const [transactions, setTransactions] = useState(transactionsData);
+  const [transactions, setTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const transactionsPerPage = 6;
+  const [totalCount, setTotalCount] = useState(0);
+  const transactionsPerPage = 10;
 
-  // Get current transactions for pagination
-  const indexOfLastTransaction = currentPage * transactionsPerPage;
-  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
-  const currentTransactions = transactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Handle page change
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const fetchTransactions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${BASE_URI}/order/list?page=${currentPage}&limit=${transactionsPerPage}`, {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        setTransactions(data.data);
+        setTotalCount(data.totalCount);
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      toast.error("Something went wrong");
+    }finally{
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [currentPage]);
+
+
+  if(isLoading){
+    return (
+     <Loader/>
+    )
+  }
+
+  const totalPages = Math.ceil(totalCount / transactionsPerPage);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-800 rounded-2xl">
       <h2 className="text-2xl font-semibold mb-4 text-white">Transaction History</h2>
-
+       <p className="text-red-500 mb-2"><strong className="text-red-600">Note* : </strong>If your payment is not updated it will get update in sometime. If not udpate to status to success plase contact customercare@adwall.com</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentTransactions.map((transaction) => (
+        {transactions.map((transaction) => (
           <div
             key={transaction.id}
-            className={`p-4 shadow-lg rounded-lg ${
-              transaction.type === "Credit" ? "bg-green-100" : "bg-red-100"
-            }`}
+            className={`p-4 shadow-lg rounded-lg bg-gray-600`}
           >
-            <h3 className="text-lg font-bold">Transaction #{transaction.id}</h3>
-            <p className="text-gray-700">Amount: ${transaction.amount}</p>
-            <p className="text-gray-700">Date: {transaction.date}</p>
+            <h3 className="text-lg text-white"><strong>Transaction Id: </strong>#{transaction?.id}</h3>
+            <p className="text-white"><strong>Product Id: </strong> {transaction?.walls?.id}</p>
+            <p className="text-white"><strong>Order Id: </strong> {transaction?.razorpay_order_id}</p>
+
+            <p className="text-white"><strong>Amount: $</strong>{transaction?.walls?.price}</p>
+            <p className="text-white"><strong>Name: </strong>{transaction?.walls?.name}</p>
+            <p className="text-white"><strong>Date: </strong> {moment(transaction?.created_at).format("DD MMM YYYY")}</p>
             <p
               className={`font-semibold ${
-                transaction.status === "Completed"
+                transaction?.payment_status === "completed"
                   ? "text-green-600"
-                  : transaction.status === "Pending"
+                  : transaction?.payment_status === "pending"
                   ? "text-orange-600"
-                  : transaction.status == "Failed" ? 
-                  "text-red-600" : "text-white"
+                  : "text-red-600"
               }`}
             >
-              Status: {transaction.status}
+              Status: {transaction?.payment_status}
             </p>
           </div>
         ))}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-6 space-x-2">
-        {Array.from({ length: Math.ceil(transactions.length / transactionsPerPage) }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => paginate(index + 1)}
-            className={`px-4 py-2 rounded-md ${
-              currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-300"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center mt-6">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg mx-2 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="text-lg">{currentPage} / {totalPages}</span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg mx-2 disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
