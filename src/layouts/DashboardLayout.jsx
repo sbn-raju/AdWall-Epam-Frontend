@@ -58,12 +58,6 @@ export default function DashboardLayout() {
       link: "/seller/dashboard/add/wall",
     },
     {
-      id: 3,
-      icon: <ShoppingBag className="mr-2" />,
-      optionName: "Orders",
-      link: "/seller/dashboard/profile",
-    },
-    {
       id: 5,
       icon: <BrickWall  className="mr-2" />,
       optionName: "Walls",

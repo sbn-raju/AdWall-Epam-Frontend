@@ -19,12 +19,17 @@ const Product = () => {
     const response = await fetch(
       `${BASE_URI}/product/list?page=${currentPage}&limit=${limit}`,{
         method:"GET",
-        credentials:'include'
+        credentials:'include',
+        headers: {
+          "Content-Type": "application/json",
+        }
       }
     );
     const result = await response.json();
+    console.log(result);
 
     if (result.success) {
+      
       setAds(result.data);
       setTotalCount(result.totalCount);
     }
@@ -74,7 +79,7 @@ const Product = () => {
             <h2 className="text-xl font-semibold">{ad.name}</h2>
             <p className="text-gray-400">{ad.description}</p>
             <p className="text-yellow-400 font-bold mt-2">₹ {ad.price}</p>
-            <p className="text-gray-500 text-sm mt-1">Posted on {moment(ad.date).format("DD MMM YYYY")}</p>
+            <p className="text-gray-500 text-sm mt-1">Posted on {moment(ad.created_at).format("DD MMM YYYY")}</p>
             {/* <p className={`w-1/2 text-center mt-1 px-2 py-1 rounded-full font-semibold ${!ad.is_available ? "text-red-600 bg-red-200" : "text-green-600 bg-green-200"}`} >{!ad.is_available ? "Not Avialable": "Avialable" }</p> */}
             <button className="p-2 bg-orange-400 rounded-md mt-4" onClick={() => handleNavigate(ad.id)}>
               Rent Now

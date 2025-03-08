@@ -27,6 +27,7 @@ import ProductSellerDetails from "./pages/seller/Product";
 import RentWall from "./pages/seller/rent/RentWalls";
 import RentWallDetails from "./pages/seller/rent/RentWallDetails";
 import EditProfile from "./EditProfile";
+import PaymentSuccess from "./products/PaymentSuccess";
 const Profile = lazy(() => import("./Profile"));
 
 const App = () => {
@@ -61,6 +62,11 @@ const App = () => {
             <Route
               path={'/payment/:product_id'}
               element={<Payments />}
+            />
+            
+            <Route
+            path="/payment/success"
+            element={<PaymentSuccess/>}
             />
           </Route>
 
@@ -123,11 +129,6 @@ const App = () => {
 
 
           </Route>
-
-           
-          
-          
-
           {/* Other routes */}
           <Route path="*" element={<Error />} />
         </Routes>
