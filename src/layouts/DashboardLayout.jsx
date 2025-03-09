@@ -27,20 +27,20 @@ export default function DashboardLayout() {
       id: 1,
       icon: <User className="mr-2" />,
       optionName: "Profile",
-      link: "buyer/dashboard/profile",
+      link: "/buyer/dashboard/profile",
     },
     {
       id: 2,
       icon: <BadgeIndianRupee className="mr-2" />,
       optionName: "Transactions",
-      link: "buyer/dashboard/tansactions",
+      link: "/buyer/dashboard/tansactions",
     },
     
     {
       id: 4,
       icon: <History className="mr-2" />,
       optionName: "Rented Walls",
-      link: "buyer/dashboard/profile",
+      link: "/buyer/dashboard/rented-walls",
     },
   ];
 

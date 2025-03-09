@@ -28,6 +28,7 @@ import RentWall from "./pages/seller/rent/RentWalls";
 import RentWallDetails from "./pages/seller/rent/RentWallDetails";
 import EditProfile from "./EditProfile";
 import PaymentSuccess from "./products/PaymentSuccess";
+import RentedWall from "./pages/buyer/RentedWalls";
 const Profile = lazy(() => import("./Profile"));
 
 const App = () => {
@@ -119,6 +120,13 @@ const App = () => {
               path="/seller/dashboard/rented-walls/details/:product_id"
               element={
                 <RentWallDetails/>
+              }
+            />
+
+              <Route
+              path="/buyer/dashboard/rented-walls"
+              element={
+                <RentedWall/>
               }
             />
 
